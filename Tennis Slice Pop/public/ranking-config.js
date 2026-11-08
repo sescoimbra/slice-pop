@@ -1,4 +1,9 @@
-// Set an adapter here after the ranking backend and Auth are configured.
-// Contract: docs/ranking-setup.md in the project source. Never put a service-role key in this file.
-// With null, guest play and daily practice work without any network requests.
-window.TennisSlicePopRankingAdapter = null;
+// Public browser credentials only. No service-role key or Google client secret.
+window.TennisSlicePopAuthConfig = Object.freeze({
+  url: 'https://pmeqgwowhgdeumedfgpj.supabase.co',
+  publishableKey: 'sb_publishable_uroIPp1r0DxYoTwLJLF_Dg_CQOKQkBy',
+});
+window.TennisSlicePopRankingAdapter = window.TennisSlicePopAuth.createAdapter(
+  window.TennisSlicePopSupabase.createClient,
+  window.TennisSlicePopAuthConfig,
+);

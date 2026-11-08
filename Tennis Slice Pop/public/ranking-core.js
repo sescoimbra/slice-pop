@@ -43,7 +43,8 @@
   }
 
   function createClient(adapter = null) {
-    const available = Boolean(adapter);
+    const available = Boolean(adapter) && adapter.rankingAvailable !== false;
+    const authAvailable = Boolean(adapter) && adapter.authAvailable !== false;
     async function call(method, input) {
       if (!adapter || typeof adapter[method] !== 'function') {
         throw new Error('As entradas no ranking abrem em breve. Podes continuar a treinar.');
@@ -61,11 +62,15 @@
     }
     return Object.freeze({
       available,
-      getPlayer: () => available ? call('getPlayer') : Promise.resolve(null),
+      authAvailable,
+      getPlayer: () => authAvailable ? call('getPlayer') : Promise.resolve(null),
       getDailyChallenge: async () => checkChallenge(await call('getDailyChallenge')),
       getLeaderboard: filters => call('getLeaderboard', filters),
       signInGoogle: () => call('signInGoogle'),
-      sendMagicLink: email => call('sendMagicLink', { email }),
+      signInEmail: (email, password) => call('signInEmail', { email, password }),
+      signUp: (email, password) => call('signUp', { email, password }),
+      resetPassword: email => call('resetPassword', { email }),
+      updatePassword: password => call('updatePassword', { password }),
       saveNickname: nickname => call('saveNickname', { nickname: normalizeNickname(nickname) }),
       signOut: () => call('signOut'),
       startMatch: mode => call('startMatch', { mode, rules_version: RULES_VERSION }),

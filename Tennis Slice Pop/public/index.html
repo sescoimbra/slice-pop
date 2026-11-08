@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#6d3829" />
-  <meta name="slice-pop-version" content="tennis-slice-pop-31" />
+  <meta name="slice-pop-version" content="tennis-slice-pop-32" />
   <meta name="description" content="Tennis Slice Pop: jogo de ténis online grátis. Testa os teus reflexos, apanha ACEs, supera o teu melhor rally e desafia os teus amigos." />
   <title>Tennis Slice Pop — Jogo de ténis online grátis</title>
   <meta property="og:site_name" content="Tennis Slice Pop" />
@@ -12,18 +12,18 @@
   <meta property="og:description" content="Testa os teus reflexos, apanha ACEs, supera o teu melhor rally e desafia os teus amigos." />
   <meta property="og:type" content="website" />
   <meta name="apple-mobile-web-app-title" content="Tennis Slice Pop" />
-  <link rel="manifest" href="manifest.json?v=tennis-slice-pop-31" />
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=tennis-slice-pop-31" />
-  <link rel="icon" href="icon.svg?v=tennis-slice-pop-31" />
+  <link rel="manifest" href="manifest.json?v=tennis-slice-pop-32" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=tennis-slice-pop-32" />
+  <link rel="icon" href="icon.svg?v=tennis-slice-pop-32" />
   <link rel="preload" href="fonts/unbounded-variable.ttf" as="font" type="font/ttf" crossorigin />
   <link rel="preload" as="image" href="assets/appnoia-logo.png" fetchpriority="high" />
   <link rel="preload" as="image" href="assets/stadium-desktop.jpg" media="(min-aspect-ratio: 4/5)" />
   <link rel="preload" as="image" href="assets/stadium-mobile.jpg" media="(max-aspect-ratio: 4/5)" />
-  <link rel="stylesheet" href="styles.css?v=tennis-slice-pop-31" />
-  <link rel="stylesheet" href="ranking.css?v=tennis-slice-pop-31" />
-  <link rel="stylesheet" href="court.css?v=tennis-slice-pop-31" />
-  <link rel="stylesheet" href="intro.css?v=tennis-slice-pop-31" />
-  <script src="court-theme.js?v=tennis-slice-pop-31"></script>
+  <link rel="stylesheet" href="styles.css?v=tennis-slice-pop-32" />
+  <link rel="stylesheet" href="ranking.css?v=tennis-slice-pop-32" />
+  <link rel="stylesheet" href="court.css?v=tennis-slice-pop-32" />
+  <link rel="stylesheet" href="intro.css?v=tennis-slice-pop-32" />
+  <script src="court-theme.js?v=tennis-slice-pop-32"></script>
 </head>
 <body>
   <section id="creatorIntro" class="creator-intro" tabindex="-1" role="dialog" aria-modal="true" aria-label="APPNOIA apresenta Tennis Slice Pop">
@@ -233,18 +233,35 @@
   <dialog id="accountDialog" class="panel ranking-dialog account-dialog" aria-labelledby="accountTitle">
     <div class="dialog-heading"><div><p class="lobby-kicker">GUARDA O TEU LUGAR</p><h2 id="accountTitle">Entra no court</h2></div></div>
     <div id="signInView" class="account-body">
-      <p class="account-intro">Jogar é livre. Entra apenas quando quiseres competir nos rankings.</p>
-      <p class="availability-note" id="authAvailability" role="status">As entradas no ranking abrem em breve. Até lá, treina o Desafio do Dia.</p>
+      <p class="account-intro">Jogar é livre. Cria a tua conta e escolhe o teu nome no court.</p>
+      <p class="availability-note" id="authAvailability" role="status"></p>
       <button id="googleSignInBtn" class="google-button" disabled><span aria-hidden="true">G</span> CONTINUAR COM GOOGLE</button>
       <div class="auth-divider"><span>OU POR EMAIL</span></div>
-      <form id="emailSignInForm"><label class="field-label" for="rankingEmail">EMAIL</label><input id="rankingEmail" class="account-input" type="email" autocomplete="email" placeholder="tu@exemplo.pt" required maxlength="254" /><button class="btn-copy" id="emailSignInBtn" type="submit" disabled>RECEBER LINK DE ENTRADA</button></form>
-      <p class="privacy-note">Sem palavra-passe. O email e o nome da conta não aparecem nas classificações.</p>
+      <div class="period-switch auth-mode" role="group" aria-label="Entrar ou criar conta"><button id="authLoginMode" type="button" aria-pressed="true">ENTRAR</button><button id="authSignUpMode" type="button" aria-pressed="false">CRIAR CONTA</button></div>
+      <form id="emailSignInForm">
+        <label class="field-label" for="rankingEmail">EMAIL</label><input id="rankingEmail" class="account-input" type="email" autocomplete="email" placeholder="tu@exemplo.pt" required maxlength="254" />
+        <div id="authPasswordField" class="auth-field"><label class="field-label" for="rankingPassword">PALAVRA-PASSE</label><input id="rankingPassword" class="account-input" type="password" autocomplete="current-password" required maxlength="128" /></div>
+        <div id="authConfirmField" class="auth-field hidden"><label class="field-label" for="rankingPasswordConfirm">CONFIRMAR PALAVRA-PASSE</label><input id="rankingPasswordConfirm" class="account-input" type="password" autocomplete="new-password" maxlength="128" disabled /></div>
+        <p id="authPasswordHelp" class="privacy-note hidden">Usa pelo menos 8 caracteres. Receberás um email para confirmar a conta.</p>
+        <button class="btn-copy" id="emailSignInBtn" type="submit" disabled>ENTRAR</button>
+      </form>
+      <button id="authResetBtn" class="text-button" type="button">ESQUECI-ME DA PALAVRA-PASSE</button>
+      <p class="privacy-note">O teu email e o nome da conta Google não aparecem nas classificações.</p>
     </div>
     <div id="profileView" class="account-body hidden">
-      <p class="account-intro">Escolhe como apareces no court. Só este nickname fica público.</p>
+      <p class="account-intro">Já estás no clube. Escolhe o teu nickname para as futuras classificações.</p>
       <form id="nicknameForm"><label class="field-label" for="rankingNickname">O TEU NICKNAME</label><input id="rankingNickname" class="account-input" type="text" autocomplete="nickname" minlength="3" maxlength="20" required placeholder="AceMachine" aria-describedby="nicknameHelp" /><p id="nicknameHelp" class="privacy-note">3–20 letras, números, _ ou -. Sem espaços.</p><button class="btn-copy" type="submit">GUARDAR NICKNAME</button></form>
       <button class="btn-copy profile-play play-action" id="rankedPlayBtn">JOGAR PARA O RANKING</button>
+      <p id="profileRankingNote" class="privacy-note">As classificações estão em preparação. Entretanto, joga livremente ou treina o Desafio do Dia.</p>
       <button class="text-button sign-out" id="signOutBtn">SAIR DA CONTA</button>
+    </div>
+    <div id="recoveryView" class="account-body hidden">
+      <p class="account-intro">Escolhe uma nova palavra-passe para voltares ao court.</p>
+      <form id="passwordRecoveryForm">
+        <label class="field-label" for="newPassword">NOVA PALAVRA-PASSE</label><input id="newPassword" class="account-input" type="password" autocomplete="new-password" minlength="8" maxlength="128" required />
+        <div class="auth-field"><label class="field-label" for="newPasswordConfirm">CONFIRMAR PALAVRA-PASSE</label><input id="newPasswordConfirm" class="account-input" type="password" autocomplete="new-password" minlength="8" maxlength="128" required /></div>
+        <button id="savePasswordBtn" class="btn-copy" type="submit">GUARDAR PALAVRA-PASSE</button>
+      </form>
     </div>
     <p class="account-status" id="accountStatus" role="status" aria-live="polite"></p>
     <button class="btn-copy guest-return" type="button" data-close-dialog>VOLTAR AO COURT</button>
@@ -254,7 +271,8 @@
     <div class="dialog-heading"><div><p class="lobby-kicker">OS TEUS DADOS</p><h2 id="privacyTitle">Privacidade</h2></div></div>
     <div class="settings-copy">
       <h3>Neste dispositivo</h3><p>O teu recorde, o piso escolhido e as preferências de som e vibração ficam guardados neste navegador. Podes removê-los nas definições de dados do site do teu navegador.</p>
-      <h3>Jogar livremente</h3><p>Não precisas de conta para jogar. Nesta versão, o login e os rankings estão em preparação e os resultados não são enviados para uma classificação online.</p>
+      <h3>Conta de jogador</h3><p>Não precisas de conta para jogar. Se te registares, o Supabase gere o teu email, a autenticação e o nickname que escolheres. Ao entrares com Google, este serviço fornece os dados da conta necessários à autenticação. A sessão fica guardada neste navegador até saíres ou expirar.</p>
+      <h3>Classificações e estatísticas</h3><p>As classificações estão em preparação. Os resultados ainda não são enviados para uma classificação online e não recolhemos estatísticas de cliques ou navegação nesta versão. O nickname será o nome público; o email e o nome da conta Google não serão mostrados nas classificações.</p>
       <h3>Ficheiros e partilha</h3><p>As fontes, imagens e sons do jogo são locais. Alguns ficheiros ficam em cache para poderes jogar offline. Se partilhares um desafio, o link inclui a pontuação e os dados necessários para repetir a mesma sequência de bolas.</p>
       <h3>Alojamento</h3><p>O site é servido pelo GitHub Pages. O GitHub regista endereços IP de visitantes para fins de segurança, conforme a sua documentação.</p>
       <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" target="_blank" rel="noopener noreferrer">Consultar a informação do GitHub Pages ↗</a>
@@ -272,12 +290,14 @@
     <button class="btn-play settings-done" type="button" data-settings-close>VOLTAR AO COURT</button>
   </dialog>
 
-  <script src="pwa-update.js?v=tennis-slice-pop-31"></script>
-  <script src="ranking-core.js?v=tennis-slice-pop-31"></script>
-  <script src="ranking-config.js?v=tennis-slice-pop-31"></script>
-  <script src="game.js?v=tennis-slice-pop-31"></script>
-  <script src="ranking-ui.js?v=tennis-slice-pop-31"></script>
-  <script src="settings.js?v=tennis-slice-pop-31"></script>
-  <script src="intro.js?v=tennis-slice-pop-31"></script>
+  <script src="pwa-update.js?v=tennis-slice-pop-32"></script>
+  <script src="ranking-core.js?v=tennis-slice-pop-32"></script>
+  <script src="vendor/supabase.js?v=tennis-slice-pop-32"></script>
+  <script src="auth.js?v=tennis-slice-pop-32"></script>
+  <script src="ranking-config.js?v=tennis-slice-pop-32"></script>
+  <script src="game.js?v=tennis-slice-pop-32"></script>
+  <script src="ranking-ui.js?v=tennis-slice-pop-32"></script>
+  <script src="settings.js?v=tennis-slice-pop-32"></script>
+  <script src="intro.js?v=tennis-slice-pop-32"></script>
 </body>
 </html>

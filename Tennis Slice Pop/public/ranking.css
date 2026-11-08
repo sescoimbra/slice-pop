@@ -60,6 +60,9 @@ button:disabled { cursor: default; opacity: .45; }
 .google-button span { font: 700 19px system-ui, sans-serif; }
 .auth-divider { display: flex; align-items: center; gap: 10px; margin: 19px 0; color: var(--muted); font-size: 10px; letter-spacing: 1px; }
 .auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: var(--sb-edge); }
+.auth-mode { margin-bottom: 16px; }
+.auth-field { margin-top: 12px; }
+#authResetBtn { display: block; margin: 8px auto 0; }
 .field-label { display: block; margin-bottom: 7px; color: var(--led-green); font-size: 11px; font-weight: 600; letter-spacing: 1px; }
 .account-input { width: 100%; min-width: 0; padding: 13px 12px; border: 1px solid #3b5145; border-radius: 8px; background: var(--panel-inset); color: var(--paper); font: 16px var(--font-body); user-select: text; -webkit-user-select: text; }
 .account-input::placeholder { color: #74877c; }

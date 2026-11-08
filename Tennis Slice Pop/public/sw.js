@@ -1,32 +1,35 @@
 'use strict';
 
-const CACHE_NAME = 'tennis-slice-pop-v39';
-const APP_VERSION = 'tennis-slice-pop-31';
+const CACHE_NAME = 'tennis-slice-pop-v40';
+const APP_VERSION = 'tennis-slice-pop-32';
 const APP_SHELL = [
   './index.html',
-  './pwa-update.js?v=tennis-slice-pop-31',
-  './styles.css?v=tennis-slice-pop-31',
-  './ranking.css?v=tennis-slice-pop-31',
-  './court.css?v=tennis-slice-pop-31',
-  './intro.css?v=tennis-slice-pop-31',
-  './intro.js?v=tennis-slice-pop-31',
-  './settings.js?v=tennis-slice-pop-31',
-  './court-theme.js?v=tennis-slice-pop-31',
-  './ranking-core.js?v=tennis-slice-pop-31',
-  './ranking-config.js?v=tennis-slice-pop-31',
-  './ranking-ui.js?v=tennis-slice-pop-31',
-  './game.js?v=tennis-slice-pop-31',
-  './manifest.json?v=tennis-slice-pop-31',
-  './icon.svg?v=tennis-slice-pop-31',
+  './pwa-update.js?v=tennis-slice-pop-32',
+  './styles.css?v=tennis-slice-pop-32',
+  './ranking.css?v=tennis-slice-pop-32',
+  './court.css?v=tennis-slice-pop-32',
+  './intro.css?v=tennis-slice-pop-32',
+  './intro.js?v=tennis-slice-pop-32',
+  './settings.js?v=tennis-slice-pop-32',
+  './court-theme.js?v=tennis-slice-pop-32',
+  './ranking-core.js?v=tennis-slice-pop-32',
+  './vendor/supabase.js?v=tennis-slice-pop-32',
+  './vendor/LICENCES.txt',
+  './auth.js?v=tennis-slice-pop-32',
+  './ranking-config.js?v=tennis-slice-pop-32',
+  './ranking-ui.js?v=tennis-slice-pop-32',
+  './game.js?v=tennis-slice-pop-32',
+  './manifest.json?v=tennis-slice-pop-32',
+  './icon.svg?v=tennis-slice-pop-32',
   './assets/stadium-desktop.jpg',
   './assets/stadium-mobile.jpg',
   './assets/appnoia-logo.png',
   './assets/court-groove.wav',
-  './icons/icon-192.png?v=tennis-slice-pop-31',
-  './icons/icon-512.png?v=tennis-slice-pop-31',
-  './icons/icon-maskable-192.png?v=tennis-slice-pop-31',
-  './icons/icon-maskable-512.png?v=tennis-slice-pop-31',
-  './icons/apple-touch-icon.png?v=tennis-slice-pop-31',
+  './icons/icon-192.png?v=tennis-slice-pop-32',
+  './icons/icon-512.png?v=tennis-slice-pop-32',
+  './icons/icon-maskable-192.png?v=tennis-slice-pop-32',
+  './icons/icon-maskable-512.png?v=tennis-slice-pop-32',
+  './icons/apple-touch-icon.png?v=tennis-slice-pop-32',
   './fonts/oswald-variable.ttf',
   './fonts/share-tech-mono-regular.ttf',
   './fonts/unbounded-variable.ttf',
@@ -51,7 +54,7 @@ self.addEventListener('activate', event => {
     caches.keys()
       .then(keys => Promise.all(
         keys
-          .filter(key => /^(?:slice|ace)-pop-/.test(key) && key !== CACHE_NAME)
+          .filter(key => /^(?:(?:tennis-)?slice|ace)-pop-/.test(key) && key !== CACHE_NAME)
           .map(key => caches.delete(key))
       ))
       .then(() => self.clients.claim())
