@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#6d3829" />
+  <meta name="slice-pop-version" content="slice-pop-29" />
+  <meta name="description" content="Slice Pop — martela bolas de ténis, faz rallies POP, apanha ACEs e desafia amigos. Viciante e cativante." />
+  <title>Slice Pop — Ténis</title>
+  <link rel="manifest" href="manifest.json?v=slice-pop-29" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=slice-pop-29" />
+  <link rel="icon" href="icon.svg?v=slice-pop-29" />
+  <link rel="preload" href="fonts/unbounded-variable.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" as="image" href="assets/appnoia-logo.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/stadium-desktop.jpg" media="(min-aspect-ratio: 4/5)" />
+  <link rel="preload" as="image" href="assets/stadium-mobile.jpg" media="(max-aspect-ratio: 4/5)" />
+  <link rel="stylesheet" href="styles.css?v=slice-pop-29" />
+  <link rel="stylesheet" href="ranking.css?v=slice-pop-29" />
+  <link rel="stylesheet" href="court.css?v=slice-pop-29" />
+  <link rel="stylesheet" href="intro.css?v=slice-pop-29" />
+  <script src="court-theme.js?v=slice-pop-29"></script>
+</head>
+<body>
+  <section id="creatorIntro" class="creator-intro" tabindex="-1" role="dialog" aria-modal="true" aria-label="APPNOIA apresenta Slice Pop">
+    <img id="creatorLogo" class="creator-logo" src="assets/appnoia-logo.png" width="1024" height="1024" alt="APPNOIA" fetchpriority="high" />
+  </section>
+  <div class="court-venue" aria-hidden="true"></div>
+
+  <!-- Overlay de Match Point (saturação conforme rally) -->
+  <div class="fever-overlay" id="feverOverlay" aria-hidden="true"></div>
+
+  <div id="app">
+    <header class="topbar">
+      <div class="score-box">
+        <span class="label">PONTOS</span>
+        <span class="value" id="scoreVal">0</span>
+      </div>
+      <div class="title-box">
+        <h1 class="game-title">SLICE<br>POP</h1>
+      </div>
+      <div class="timer-box" id="timerBox">
+        <span class="label">TEMPO</span>
+        <span class="value" id="timerVal">60</span>
+      </div>
+    </header>
+
+    <div class="combo-wrap" id="comboWrap">
+      <div class="combo-track">
+        <div class="combo-fill" id="comboFill"></div>
+      </div>
+      <div class="combo-label">
+        <span id="comboText">RALLY</span>
+        <span class="combo-mult" id="comboMult">x1</span>
+      </div>
+    </div>
+
+    <main class="stage">
+      <div class="board" id="board" role="grid" aria-label="Court de ténis"></div>
+      <!-- Raquetada transiente (feedback de acerto, não é cursor) -->
+      <div class="slash-layer" id="slashLayer" aria-hidden="true"></div>
+      <canvas class="fx-layer" id="fxLayer" aria-hidden="true"></canvas>
+      <div id="aceCelebration" class="ace-celebration" aria-hidden="true"><strong>ACE!</strong><span>+2 SEGUNDOS</span></div>
+      <p id="feedbackStatus" class="sr-only" role="status" aria-live="polite"></p>
+    </main>
+    <div class="court-session-bar"><span><i aria-hidden="true"></i> <span data-court-name>TERRA BATIDA</span></span><span>Slice Pop Tennis</span></div>
+
+    <!-- Ecrã de início -->
+    <section class="overlay court-entry" id="courtSelectScreen" aria-label="Escolher o court">
+      <div class="settings-anchor" id="settingsAnchor">
+        <button id="settingsBtn" class="settings-trigger" type="button" aria-label="Definições" aria-haspopup="menu" aria-expanded="false" aria-controls="settingsMenu">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m9 3-.7 2.2-2 .9-2.1-.5-2 3.4L3.8 11v2L2.2 15l2 3.4 2.1-.5 2 .9L9 21h4l.7-2.2 2-.9 2.1.5 2-3.4-1.6-2v-2l1.6-2-2-3.4-2.1.5-2-.9L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          <span>DEFINIÇÕES</span>
+        </button>
+        <div id="settingsMenu" class="settings-menu" role="menu" aria-label="Definições" hidden>
+          <button id="settingsLanguage" class="settings-item" type="button" role="menuitem" disabled aria-disabled="true"><span>Idioma</span><span class="settings-value">PT / UK</span></button>
+          <button id="settingsAudio" class="settings-item" type="button" role="menuitemcheckbox" aria-checked="true"><span>Áudio</span><span class="settings-value" id="settingsAudioState" aria-hidden="true">ON</span></button>
+          <button id="settingsMusic" class="settings-item" type="button" role="menuitemcheckbox" aria-checked="true"><span>Música</span><span class="settings-value" id="settingsMusicState" aria-hidden="true">ON</span></button>
+          <button id="settingsVibration" class="settings-item" type="button" role="menuitemcheckbox" aria-checked="false"><span>Vibração</span><span class="settings-value" id="settingsVibrationState" aria-hidden="true">OFF</span></button>
+          <div class="settings-divider" role="separator"></div>
+          <button id="settingsPrivacy" class="settings-item" type="button" role="menuitem"><span>Privacidade</span><span aria-hidden="true">↗</span></button>
+          <button id="settingsAbout" class="settings-item" type="button" role="menuitem"><span>Sobre nós</span><span aria-hidden="true">↗</span></button>
+        </div>
+      </div>
+      <div class="court-lobby">
+      <div class="court-intro">
+        <p class="court-wordmark">SLICE<span>POP.</span></p>
+        <h2 class="court-heading">O court é teu.</h2>
+        <p class="court-intro-copy">Encontra o ritmo. Sente cada pancada.<br> O próximo grande rally começa aqui.</p>
+        <div class="surface-picker">
+          <p class="surface-picker-label">ESCOLHE O TEU PISO</p>
+          <div class="surface-options" role="group" aria-label="Superfície do court">
+            <button type="button" data-surface-option="clay" aria-pressed="true"><span class="surface-swatch swatch-clay" aria-hidden="true"></span><span>Terra Batida</span><small>CLAY COURT</small></button>
+            <button type="button" data-surface-option="hard" aria-pressed="false"><span class="surface-swatch swatch-hard" aria-hidden="true"></span><span>Sintético</span><small>HARD COURT</small></button>
+            <button type="button" data-surface-option="grass" aria-pressed="false"><span class="surface-swatch swatch-grass" aria-hidden="true"></span><span>Relva</span><small>GRASS COURT</small></button>
+          </div>
+          <p id="surfaceDescription" class="surface-description" aria-live="polite">Terracota quente. Linhas de cal. Espírito de clube.</p>
+        </div>
+        <button class="btn-play enter-court play-action" id="enterCourtBtn" type="button">ENTRAR EM CAMPO</button>
+      </div>
+      </div>
+    </section>
+
+    <section class="overlay hidden game-menu" id="startScreen" aria-label="Preparar a partida">
+      <div class="panel lobby-panel">
+        <div class="lobby-scroll">
+          <div class="lobby-topline">
+            <span class="lobby-kicker" data-court-name>TERRA BATIDA</span>
+            <button class="text-button menu-court-back" id="menuCourtBackBtn" type="button">Mudar piso <span aria-hidden="true">↗</span></button>
+          </div>
+          <div class="lobby-hero">
+            <p class="lobby-eyebrow">O COURT ESPERA POR TI</p>
+            <h2 class="big-title">Testa os teus<br>reflexos.</h2>
+            <p class="tagline">60 segundos. Faz cada pancada contar.</p>
+          </div>
+          <button id="challengeBanner" class="challenge-banner hidden" type="button" aria-label="Jogar o desafio do amigo">
+            <span class="challenge-topline"><span class="challenge-light" aria-hidden="true"></span> DESAFIO RECEBIDO</span>
+            <span id="challengeText">Um amigo desafiou-te.</span>
+            <span class="challenge-target"><strong id="challengeScore">0</strong><span>PONTOS<br>A BATER</span></span>
+            <span class="challenge-call">JOGAR ESTE DESAFIO</span>
+          </button>
+          <button class="btn-play play-action" id="playBtn">JOGAR</button>
+          <div class="lobby-modes" role="group" aria-label="Tipo de partida">
+            <button id="freeModeBtn" type="button" aria-pressed="true">Jogo livre</button>
+            <button id="dailyPlayBtn" type="button" aria-pressed="false" disabled>Desafio do Dia</button>
+          </div>
+          <div class="daily-slot">
+            <div class="daily-card hidden" id="dailyDetails">
+              <div class="daily-heading"><span>O mesmo desafio para todos</span><span class="daily-date" id="dailyDate">HOJE</span></div>
+              <p class="daily-caption" id="dailyCaption">A preparar o court de hoje…</p>
+              <button id="dailyStartBtn" class="text-button daily-start play-action" type="button" disabled>JOGAR DESAFIO DO DIA</button>
+            </div>
+          </div>
+          <p class="sr-only" id="playerNote" aria-live="polite">Sem conta. Sem esperar. Só jogar.</p>
+          <div class="lobby-footer">
+            <p class="best" id="bestLine">O teu recorde <b id="bestVal">—</b></p>
+            <div class="lobby-links">
+              <button class="text-button" id="rankingBtn">Classificações</button>
+              <button class="text-button" id="rulesBtn">Como jogar</button>
+              <button class="text-button" id="accountBtn">Entrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal de regras completas -->
+    <section class="overlay hidden" id="rulesScreen" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+      <div class="panel rules-panel">
+        <h2 class="rules-title" id="rulesTitle">COMO JOGAR</h2>
+        <div class="rules-full">
+          <div class="rule-block">
+            <span class="rule-ball" data-rule-ball="mole" aria-hidden="true"></span>
+            <p><strong class="rule-name">Bola (+10).</strong> <span class="rule-desc">Toca nas amarelas para marcar pontos e aumentar o rally.</span></p>
+          </div>
+          <div class="rule-block">
+            <span class="rule-ball" data-rule-ball="gold" aria-hidden="true"></span>
+            <p><strong class="rule-name">ACE (+50 e +2s).</strong> <span class="rule-desc">Apanha as douradas: valem 5 bolas e dão mais 2 segundos.</span></p>
+          </div>
+          <div class="rule-block">
+            <span class="rule-ball" data-rule-ball="bomb" aria-hidden="true"></span>
+            <p><strong class="rule-name">OUT (-30).</strong> <span class="rule-desc">Evita as vermelhas: tiram 30 pontos e quebram o rally.</span></p>
+          </div>
+          <div class="rule-block">
+            <span class="rule-icon" aria-hidden="true">↑</span>
+            <p><strong class="rule-name">Rally.</strong> <span class="rule-desc">Acertos seguidos: x2 (3+), x3 (6+), x4 (10+), x5 (15+).</span></p>
+          </div>
+          <div class="rule-block">
+            <span class="rule-icon" aria-hidden="true">✗</span>
+            <p><strong class="rule-name">Quebra de rally.</strong> <span class="rule-desc">Uma OUT, um toque em vazio ou 1,6s sem acertar. Deixar passar uma OUT mantém o rally.</span></p>
+          </div>
+          <div class="rule-block">
+            <span class="rule-icon" aria-hidden="true">⚡</span>
+            <p><strong class="rule-name">Match Point.</strong> <span class="rule-desc">Mais bolas, OUTs e ACEs nos últimos 10 segundos.</span></p>
+          </div>
+          <div class="rule-block">
+            <span class="rule-icon" aria-hidden="true">🏆</span>
+            <p><strong class="rule-name">Níveis.</strong> <span class="rule-desc">Caloiro · Club Player · Baseline Boss · Ace Machine · Set Point Sniper · Grand Slam Legend · Tiebreak Titan · GOAT Mode</span></p>
+          </div>
+        </div>
+        <button class="btn-play btn-close" id="rulesCloseBtn">VOLTAR AO COURT</button>
+      </div>
+    </section>
+
+    <!-- Ecrã de fim -->
+    <section class="overlay hidden" id="endScreen">
+      <div class="panel result-card" id="resultCard">
+        <p class="end-kicker" id="endKicker">FIM DO JOGO</p>
+        <h2 class="final-score" id="finalScore">0</h2>
+        <p class="rank-label" id="rankLabel">Nível: Caloiro</p>
+        <div class="result-stats">
+          <div><span class="stat-num" id="maxComboStat">0</span><span class="stat-cap">rally máx.</span></div>
+          <div><span class="stat-num" id="hitsStat">0</span><span class="stat-cap">acertos</span></div>
+          <div><span class="stat-num" id="bestStat">0</span><span class="stat-cap">recorde</span></div>
+        </div>
+        <div class="end-actions">
+          <button class="btn-play play-action" id="replayBtn">JOGAR OUTRA VEZ</button>
+          <button class="btn-share" id="shareBtn">DESAFIAR AMIGO</button>
+          <button class="btn-rules" id="courtLobbyBtn">MUDAR DE COURT</button>
+        </div>
+        <div class="share-box hidden" id="shareBox">
+          <label class="share-label" for="shareUrlInput">Copia este link e envia a um amigo:</label>
+          <input type="text" id="shareUrlInput" class="share-input" readonly />
+          <button class="btn-copy" id="copyBtn">COPIAR LINK</button>
+        </div>
+        <p class="hint" id="shareHint"></p>
+        <div class="ranking-result">
+          <p id="submissionStatus" role="status" aria-live="polite">Partida livre · recorde guardado neste dispositivo.</p>
+          <button class="text-button" id="resultRankingBtn">ENTRAR NO RANKING ↗</button>
+          <button class="text-button hidden" id="retrySubmitBtn">TENTAR ENVIAR NOVAMENTE</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <dialog id="rankingDialog" class="panel ranking-dialog" aria-labelledby="rankingTitle">
+    <div class="dialog-heading"><div><p class="lobby-kicker">O COURT É DE TODOS</p><h2 id="rankingTitle">Classificações</h2></div><button class="icon-close" data-close-dialog aria-label="Voltar ao court">VOLTAR</button></div>
+    <div class="ranking-controls">
+      <div class="period-switch" role="group" aria-label="Período do ranking"><button data-period="day" aria-pressed="true">HOJE</button><button data-period="month" aria-pressed="false">ESTE MÊS</button></div>
+      <label class="mode-filter" for="rankingMode">COMPETIÇÃO<select id="rankingMode"><option value="daily">Desafio do Dia</option><option value="free">Jogo livre</option></select></label>
+    </div>
+    <p class="ranking-context" id="rankingContext"></p>
+    <div class="ranking-table-wrap"><table class="ranking-table"><caption class="sr-only">Melhor partida de cada jogador no período selecionado</caption><thead><tr><th scope="col">#</th><th scope="col">JOGADOR</th><th scope="col">PONTOS</th><th scope="col">RALLY</th></tr></thead><tbody id="rankingRows"></tbody></table></div>
+    <div class="ranking-empty" id="rankingEmpty" role="status" aria-live="polite"><span class="empty-court" aria-hidden="true">↗</span><h3 id="rankingEmptyTitle">O próximo nome pode ser o teu.</h3><p id="rankingEmptyText"></p></div>
+    <button class="text-button ranking-refresh hidden" id="rankingRefreshBtn">ATUALIZAR CLASSIFICAÇÃO</button>
+    <div class="ranking-footer"><p>Conta a tua melhor partida. Só o nickname é público.</p><button class="btn-copy play-action" id="competeBtn">ENTRAR E COMPETIR</button></div>
+  </dialog>
+
+  <dialog id="accountDialog" class="panel ranking-dialog account-dialog" aria-labelledby="accountTitle">
+    <div class="dialog-heading"><div><p class="lobby-kicker">GUARDA O TEU LUGAR</p><h2 id="accountTitle">Entra no court</h2></div></div>
+    <div id="signInView" class="account-body">
+      <p class="account-intro">Jogar é livre. Entra apenas quando quiseres competir nos rankings.</p>
+      <p class="availability-note" id="authAvailability" role="status">As entradas no ranking abrem em breve. Até lá, treina o Desafio do Dia.</p>
+      <button id="googleSignInBtn" class="google-button" disabled><span aria-hidden="true">G</span> CONTINUAR COM GOOGLE</button>
+      <div class="auth-divider"><span>OU POR EMAIL</span></div>
+      <form id="emailSignInForm"><label class="field-label" for="rankingEmail">EMAIL</label><input id="rankingEmail" class="account-input" type="email" autocomplete="email" placeholder="tu@exemplo.pt" required maxlength="254" /><button class="btn-copy" id="emailSignInBtn" type="submit" disabled>RECEBER LINK DE ENTRADA</button></form>
+      <p class="privacy-note">Sem palavra-passe. O email e o nome da conta não aparecem nas classificações.</p>
+    </div>
+    <div id="profileView" class="account-body hidden">
+      <p class="account-intro">Escolhe como apareces no court. Só este nickname fica público.</p>
+      <form id="nicknameForm"><label class="field-label" for="rankingNickname">O TEU NICKNAME</label><input id="rankingNickname" class="account-input" type="text" autocomplete="nickname" minlength="3" maxlength="20" required placeholder="AceMachine" aria-describedby="nicknameHelp" /><p id="nicknameHelp" class="privacy-note">3–20 letras, números, _ ou -. Sem espaços.</p><button class="btn-copy" type="submit">GUARDAR NICKNAME</button></form>
+      <button class="btn-copy profile-play play-action" id="rankedPlayBtn">JOGAR PARA O RANKING</button>
+      <button class="text-button sign-out" id="signOutBtn">SAIR DA CONTA</button>
+    </div>
+    <p class="account-status" id="accountStatus" role="status" aria-live="polite"></p>
+    <button class="btn-copy guest-return" type="button" data-close-dialog>VOLTAR AO COURT</button>
+  </dialog>
+
+  <dialog id="privacyDialog" class="panel ranking-dialog settings-dialog" aria-labelledby="privacyTitle">
+    <div class="dialog-heading"><div><p class="lobby-kicker">OS TEUS DADOS</p><h2 id="privacyTitle">Privacidade</h2></div></div>
+    <div class="settings-copy">
+      <h3>Neste dispositivo</h3><p>O teu recorde, o piso escolhido e as preferências de som e vibração ficam guardados neste navegador. Podes removê-los nas definições de dados do site do teu navegador.</p>
+      <h3>Jogar livremente</h3><p>Não precisas de conta para jogar. Nesta versão, o login e os rankings estão em preparação e os resultados não são enviados para uma classificação online.</p>
+      <h3>Ficheiros e partilha</h3><p>As fontes, imagens e sons do jogo são locais. Alguns ficheiros ficam em cache para poderes jogar offline. Se partilhares um desafio, o link inclui a pontuação e os dados necessários para repetir a mesma sequência de bolas.</p>
+      <h3>Alojamento</h3><p>O site é servido pelo GitHub Pages. O GitHub regista endereços IP de visitantes para fins de segurança, conforme a sua documentação.</p>
+      <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" target="_blank" rel="noopener noreferrer">Consultar a informação do GitHub Pages ↗</a>
+    </div>
+    <button class="btn-play settings-done" type="button" data-settings-close>VOLTAR AO COURT</button>
+  </dialog>
+
+  <dialog id="aboutDialog" class="panel ranking-dialog settings-dialog" aria-labelledby="aboutTitle">
+    <div class="dialog-heading"><div><p class="lobby-kicker">UMA CRIAÇÃO APPNOIA</p><h2 id="aboutTitle">Sobre nós</h2></div></div>
+    <div class="settings-copy about-copy">
+      <img class="about-creator-logo" src="assets/appnoia-logo.png" width="1024" height="1024" alt="APPNOIA" loading="lazy" />
+      <h3>Slice Pop, por APPNOIA.</h3><p>Um jogo arcade inspirado no ténis, feito para quem gosta de estar em court.</p>
+      <p>Joga em Terra Batida, Sintético ou Relva, procura o teu melhor rally e desafia os teus amigos. Cada partida é uma nova oportunidade para superar o teu recorde.</p>
+    </div>
+    <button class="btn-play settings-done" type="button" data-settings-close>VOLTAR AO COURT</button>
+  </dialog>
+
+  <script src="pwa-update.js?v=slice-pop-29"></script>
+  <script src="ranking-core.js?v=slice-pop-29"></script>
+  <script src="ranking-config.js?v=slice-pop-29"></script>
+  <script src="game.js?v=slice-pop-29"></script>
+  <script src="ranking-ui.js?v=slice-pop-29"></script>
+  <script src="settings.js?v=slice-pop-29"></script>
+  <script src="intro.js?v=slice-pop-29"></script>
+</body>
+</html>
