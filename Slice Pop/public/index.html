@@ -4,24 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#6d3829" />
-  <meta name="slice-pop-version" content="slice-pop-29" />
-  <meta name="description" content="Slice Pop — martela bolas de ténis, faz rallies POP, apanha ACEs e desafia amigos. Viciante e cativante." />
-  <title>Slice Pop — Ténis</title>
-  <link rel="manifest" href="manifest.json?v=slice-pop-29" />
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=slice-pop-29" />
-  <link rel="icon" href="icon.svg?v=slice-pop-29" />
+  <meta name="slice-pop-version" content="slice-pop-30" />
+  <meta name="description" content="Tennis Slice Pop: jogo de ténis online grátis. Testa os teus reflexos, apanha ACEs, supera o teu melhor rally e desafia os teus amigos." />
+  <title>Tennis Slice Pop — Jogo de ténis online grátis</title>
+  <meta property="og:site_name" content="Tennis Slice Pop" />
+  <meta property="og:title" content="Tennis Slice Pop — Jogo de ténis online grátis" />
+  <meta property="og:description" content="Testa os teus reflexos, apanha ACEs, supera o teu melhor rally e desafia os teus amigos." />
+  <meta property="og:type" content="website" />
+  <meta name="apple-mobile-web-app-title" content="Tennis Slice Pop" />
+  <link rel="manifest" href="manifest.json?v=slice-pop-30" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=slice-pop-30" />
+  <link rel="icon" href="icon.svg?v=slice-pop-30" />
   <link rel="preload" href="fonts/unbounded-variable.ttf" as="font" type="font/ttf" crossorigin />
   <link rel="preload" as="image" href="assets/appnoia-logo.png" fetchpriority="high" />
   <link rel="preload" as="image" href="assets/stadium-desktop.jpg" media="(min-aspect-ratio: 4/5)" />
   <link rel="preload" as="image" href="assets/stadium-mobile.jpg" media="(max-aspect-ratio: 4/5)" />
-  <link rel="stylesheet" href="styles.css?v=slice-pop-29" />
-  <link rel="stylesheet" href="ranking.css?v=slice-pop-29" />
-  <link rel="stylesheet" href="court.css?v=slice-pop-29" />
-  <link rel="stylesheet" href="intro.css?v=slice-pop-29" />
-  <script src="court-theme.js?v=slice-pop-29"></script>
+  <link rel="stylesheet" href="styles.css?v=slice-pop-30" />
+  <link rel="stylesheet" href="ranking.css?v=slice-pop-30" />
+  <link rel="stylesheet" href="court.css?v=slice-pop-30" />
+  <link rel="stylesheet" href="intro.css?v=slice-pop-30" />
+  <script src="court-theme.js?v=slice-pop-30"></script>
 </head>
 <body>
-  <section id="creatorIntro" class="creator-intro" tabindex="-1" role="dialog" aria-modal="true" aria-label="APPNOIA apresenta Slice Pop">
+  <section id="creatorIntro" class="creator-intro" tabindex="-1" role="dialog" aria-modal="true" aria-label="APPNOIA apresenta Tennis Slice Pop">
     <img id="creatorLogo" class="creator-logo" src="assets/appnoia-logo.png" width="1024" height="1024" alt="APPNOIA" fetchpriority="high" />
   </section>
   <div class="court-venue" aria-hidden="true"></div>
@@ -36,7 +41,7 @@
         <span class="value" id="scoreVal">0</span>
       </div>
       <div class="title-box">
-        <h1 class="game-title">SLICE<br>POP</h1>
+        <h1 class="game-title" aria-label="Tennis Slice Pop"><small class="brand-tennis">TENNIS</small>SLICE<br>POP</h1>
       </div>
       <div class="timer-box" id="timerBox">
         <span class="label">TEMPO</span>
@@ -62,7 +67,7 @@
       <div id="aceCelebration" class="ace-celebration" aria-hidden="true"><strong>ACE!</strong><span>+2 SEGUNDOS</span></div>
       <p id="feedbackStatus" class="sr-only" role="status" aria-live="polite"></p>
     </main>
-    <div class="court-session-bar"><span><i aria-hidden="true"></i> <span data-court-name>TERRA BATIDA</span></span><span>Slice Pop Tennis</span></div>
+    <div class="court-session-bar"><span><i aria-hidden="true"></i> <span data-court-name>TERRA BATIDA</span></span><span>Tennis Slice Pop</span></div>
 
     <!-- Ecrã de início -->
     <section class="overlay court-entry" id="courtSelectScreen" aria-label="Escolher o court">
@@ -83,7 +88,7 @@
       </div>
       <div class="court-lobby">
       <div class="court-intro">
-        <p class="court-wordmark">SLICE<span>POP.</span></p>
+        <p class="court-wordmark" aria-label="Tennis Slice Pop"><small class="brand-tennis">TENNIS</small>SLICE<span>POP.</span></p>
         <h2 class="court-heading">O court é teu.</h2>
         <p class="court-intro-copy">Encontra o ritmo. Sente cada pancada.<br> O próximo grande rally começa aqui.</p>
         <div class="surface-picker">
@@ -261,18 +266,18 @@
     <div class="dialog-heading"><div><p class="lobby-kicker">UMA CRIAÇÃO APPNOIA</p><h2 id="aboutTitle">Sobre nós</h2></div></div>
     <div class="settings-copy about-copy">
       <img class="about-creator-logo" src="assets/appnoia-logo.png" width="1024" height="1024" alt="APPNOIA" loading="lazy" />
-      <h3>Slice Pop, por APPNOIA.</h3><p>Um jogo arcade inspirado no ténis, feito para quem gosta de estar em court.</p>
+      <h3>Tennis Slice Pop, por APPNOIA.</h3><p>Um jogo arcade inspirado no ténis, feito para quem gosta de estar em court.</p>
       <p>Joga em Terra Batida, Sintético ou Relva, procura o teu melhor rally e desafia os teus amigos. Cada partida é uma nova oportunidade para superar o teu recorde.</p>
     </div>
     <button class="btn-play settings-done" type="button" data-settings-close>VOLTAR AO COURT</button>
   </dialog>
 
-  <script src="pwa-update.js?v=slice-pop-29"></script>
-  <script src="ranking-core.js?v=slice-pop-29"></script>
-  <script src="ranking-config.js?v=slice-pop-29"></script>
-  <script src="game.js?v=slice-pop-29"></script>
-  <script src="ranking-ui.js?v=slice-pop-29"></script>
-  <script src="settings.js?v=slice-pop-29"></script>
-  <script src="intro.js?v=slice-pop-29"></script>
+  <script src="pwa-update.js?v=slice-pop-30"></script>
+  <script src="ranking-core.js?v=slice-pop-30"></script>
+  <script src="ranking-config.js?v=slice-pop-30"></script>
+  <script src="game.js?v=slice-pop-30"></script>
+  <script src="ranking-ui.js?v=slice-pop-30"></script>
+  <script src="settings.js?v=slice-pop-30"></script>
+  <script src="intro.js?v=slice-pop-30"></script>
 </body>
 </html>

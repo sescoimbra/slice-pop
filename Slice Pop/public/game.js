@@ -1,5 +1,5 @@
 /* ============================================================
-   SLICE POP — (v1.0)
+   TENNIS SLICE POP — (v1.0)
    Motor: spawns, rallies, ACE, OUT, match point, raquetada
    transiente, partículas com glow, sons, partilha por link.
    ============================================================ */
@@ -837,14 +837,14 @@ function buildShareUrl() {
 }
 async function shareChallenge() {
   const url = buildShareUrl();
-  const text = `Acabei com ${State.score} pontos no Slice Pop! Conseguem bater-me? (${rankForScore(State.score)})`;
+  const text = `Acabei com ${State.score} pontos no Tennis Slice Pop! Conseguem bater-me? (${rankForScore(State.score)})`;
   const input = $('shareUrlInput');
   const box = $('shareBox');
   input.value = url;
   box.classList.remove('hidden');
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'Slice Pop', text, url });
+      await navigator.share({ title: 'Tennis Slice Pop', text, url });
       shareHint.textContent = 'Desafio enviado!';
       return;
     } catch (e) { /* cai abaixo */ }
