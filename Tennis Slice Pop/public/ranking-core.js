@@ -75,7 +75,7 @@
     });
   }
 
-  root.SlicePopRanking = Object.freeze({
+  root.TennisSlicePopRanking = Object.freeze({
     RULES_VERSION, lisbonDay, practiceChallenge, checkChallenge, normalizeNickname, matchPayload, createClient,
   });
 })(globalThis);

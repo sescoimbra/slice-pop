@@ -8,7 +8,7 @@
   let reloading = false;
   let observer;
   function applyUpdate() {
-    if (!pending || reloading || window.SlicePopGame?.phase === 'playing') return;
+    if (!pending || reloading || window.TennisSlicePopGame?.phase === 'playing') return;
     const inMenu = ['courtSelectScreen', 'startScreen'].some(id => {
       const screen = document.getElementById(id);
       return screen && !screen.classList.contains('hidden');

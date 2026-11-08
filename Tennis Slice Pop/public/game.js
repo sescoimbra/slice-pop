@@ -954,15 +954,15 @@ function toggleHaptics() {
 // ---------- Eventos ----------
 function bindEvents() {
   $('playBtn').addEventListener('click', () => {
-    if (window.SlicePopLobby) window.SlicePopLobby.play();
+    if (window.TennisSlicePopLobby) window.TennisSlicePopLobby.play();
     else startRound({ seed: createSeed() });
   });
   $('challengeBanner').addEventListener('click', () => {
-    if (window.SlicePopLobby) window.SlicePopLobby.challenge();
+    if (window.TennisSlicePopLobby) window.TennisSlicePopLobby.challenge();
     else if (State.challengeScore !== null) startRound({ seed: State.challengeSeed, challenge: true });
   });
   $('replayBtn').addEventListener('click', () => {
-    if (window.SlicePopLobby) window.SlicePopLobby.replay();
+    if (window.TennisSlicePopLobby) window.TennisSlicePopLobby.replay();
     else startRound({ seed: State.seed, challenge: State.challengeActive });
   });
   $('shareBtn').addEventListener('click', () => shareChallenge());
@@ -1014,7 +1014,7 @@ function init() {
   updateHUD();
 }
 
-window.SlicePopGame = Object.freeze({
+window.TennisSlicePopGame = Object.freeze({
   start: startRound,
   toggleSound,
   toggleHaptics,

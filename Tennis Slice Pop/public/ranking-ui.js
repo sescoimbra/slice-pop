@@ -1,9 +1,9 @@
 (function () {
   'use strict';
-  const core = window.SlicePopRanking;
-  const client = core.createClient(window.SlicePopRankingAdapter);
+  const core = window.TennisSlicePopRanking;
+  const client = core.createClient(window.TennisSlicePopRankingAdapter);
   // Keep the shared target separate from new free-play rounds.
-  const friendChallenge = window.SlicePopGame.challenge;
+  const friendChallenge = window.TennisSlicePopGame.challenge;
   const el = id => document.getElementById(id);
   let player = null;
   let period = 'day';
@@ -144,20 +144,20 @@
   }
 
   async function play(mode = 'free', ranked = false, friend = false) {
-    if (starting || window.SlicePopGame.phase === 'playing' || (friend && !friendChallenge)) return;
+    if (starting || window.TennisSlicePopGame.phase === 'playing' || (friend && !friendChallenge)) return;
     if (ranked && (!player || !player.nickname)) { showAccount(); return; }
     if (ranked && pendingResult) {
       showAccount('Envia primeiro o resultado pendente no ecrã de fim. Podes continuar a jogar livremente.');
       return;
     }
     // Unlock audio inside the player's gesture, before seed/session requests.
-    window.SlicePopGame.prepareAudio?.();
+    window.TennisSlicePopGame.prepareAudio?.();
     starting = true;
     renderMode();
     el('rankedPlayBtn').disabled = true;
     el('dailyPlayBtn').disabled = true;
     try {
-      let seed = friend ? friendChallenge.seed : window.SlicePopGame.createSeed();
+      let seed = friend ? friendChallenge.seed : window.TennisSlicePopGame.createSeed();
       let session = null;
       if (ranked) {
         if (!online()) throw new Error('Precisas de ligação para iniciar uma partida de ranking.');
@@ -180,7 +180,7 @@
       closeDialogs();
       const options = { mode, seed };
       if (friend) options.challenge = true;
-      window.SlicePopGame.start(options);
+      window.TennisSlicePopGame.start(options);
     } catch (error) {
       showAccount(errorText(error));
     } finally {
@@ -223,7 +223,7 @@
       el('resultRankingBtn').textContent = 'ENTRAR NO RANKING ↗';
     }
   });
-  window.SlicePopLobby = Object.freeze({
+  window.TennisSlicePopLobby = Object.freeze({
     play: () => play('free'),
     challenge: () => play('free', false, true),
     replay: () => play(lastPlay.mode, lastPlay.ranked, lastPlay.friend),

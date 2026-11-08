@@ -15,21 +15,21 @@
     return [...menu.querySelectorAll('[role="menuitem"], [role="menuitemcheckbox"]')].filter(item => !item.disabled);
   }
   function syncAudio() {
-    audio.disabled = typeof window.SlicePopGame?.toggleSound !== 'function';
-    const enabled = Boolean(window.SlicePopGame?.soundOn);
+    audio.disabled = typeof window.TennisSlicePopGame?.toggleSound !== 'function';
+    const enabled = Boolean(window.TennisSlicePopGame?.soundOn);
     audio.setAttribute('aria-checked', String(enabled));
     audioState.textContent = enabled ? 'ON' : 'OFF';
   }
   function syncVibration() {
-    const supported = Boolean(window.SlicePopGame?.hapticsSupported) && typeof window.SlicePopGame?.toggleHaptics === 'function';
+    const supported = Boolean(window.TennisSlicePopGame?.hapticsSupported) && typeof window.TennisSlicePopGame?.toggleHaptics === 'function';
     vibration.disabled = !supported;
-    const enabled = supported && Boolean(window.SlicePopGame?.hapticsOn);
+    const enabled = supported && Boolean(window.TennisSlicePopGame?.hapticsOn);
     vibration.setAttribute('aria-checked', String(enabled));
     vibrationState.textContent = !supported ? 'INDISPONÍVEL' : enabled ? 'ON' : 'OFF';
   }
   function syncMusic() {
-    music.disabled = typeof window.SlicePopGame?.toggleMusic !== 'function';
-    const enabled = Boolean(window.SlicePopGame?.musicOn);
+    music.disabled = typeof window.TennisSlicePopGame?.toggleMusic !== 'function';
+    const enabled = Boolean(window.TennisSlicePopGame?.musicOn);
     music.setAttribute('aria-checked', String(enabled));
     musicState.textContent = enabled ? 'ON' : 'OFF';
   }
@@ -76,19 +76,19 @@
   });
   audio.addEventListener('click', () => {
     if (audio.disabled) return;
-    window.SlicePopGame.toggleSound();
+    window.TennisSlicePopGame.toggleSound();
     syncAudio();
   });
   window.addEventListener('slice-pop:audio-changed', syncAudio);
   music.addEventListener('click', () => {
     if (music.disabled) return;
-    window.SlicePopGame.toggleMusic();
+    window.TennisSlicePopGame.toggleMusic();
     syncMusic();
   });
   window.addEventListener('slice-pop:music-changed', syncMusic);
   vibration.addEventListener('click', () => {
     if (vibration.disabled) return;
-    window.SlicePopGame.toggleHaptics();
+    window.TennisSlicePopGame.toggleHaptics();
     syncVibration();
   });
   window.addEventListener('slice-pop:haptics-changed', syncVibration);

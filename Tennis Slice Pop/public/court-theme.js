@@ -45,7 +45,7 @@
           document.getElementById('endScreen').classList.add('hidden');
           document.getElementById('startScreen').classList.add('hidden');
           document.getElementById('courtSelectScreen').classList.remove('hidden');
-          root.SlicePopGame?.syncMusic?.();
+          root.TennisSlicePopGame?.syncMusic?.();
           document.querySelector('[data-surface-option][aria-pressed="true"]')?.focus();
         });
       }
@@ -54,7 +54,7 @@
     if (enter && !enter.dataset.courtBound) {
       enter.dataset.courtBound = 'true';
       enter.addEventListener('click', () => {
-        root.SlicePopGame?.enterCourt?.();
+        root.TennisSlicePopGame?.enterCourt?.();
         document.getElementById('courtSelectScreen').classList.add('hidden');
         document.getElementById('startScreen').classList.remove('hidden');
         document.getElementById('playBtn')?.focus({ preventScroll: true });
@@ -66,5 +66,5 @@
   paint();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once: true });
   else mount();
-  root.SlicePopCourt = Object.freeze({ select, mount, get surface() { return current; } });
+  root.TennisSlicePopCourt = Object.freeze({ select, mount, get surface() { return current; } });
 })(globalThis);
