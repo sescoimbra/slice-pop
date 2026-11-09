@@ -5,26 +5,26 @@
     const messages = {
       invalid_credentials: 'Email ou palavra-passe incorretos.',
       email_not_confirmed: 'Confirma primeiro o teu email através do link que recebeste.',
-      user_already_exists: 'Não foi possível criar a conta. Tenta entrar ou recuperar a palavra-passe.',
-      email_exists: 'Não foi possível criar a conta. Tenta entrar ou recuperar a palavra-passe.',
-      signup_disabled: 'O registo está temporariamente indisponível.',
-      provider_disabled: 'O login Google está temporariamente indisponível.',
+      user_already_exists: 'Não foi possível concluir o Sign Up. Tenta fazer Login ou recuperar a palavra-passe.',
+      email_exists: 'Não foi possível concluir o Sign Up. Tenta fazer Login ou recuperar a palavra-passe.',
+      signup_disabled: 'O Sign Up está temporariamente indisponível.',
+      provider_disabled: 'O Login com Google está temporariamente indisponível.',
       weak_password: 'Escolhe uma palavra-passe mais forte, com pelo menos 8 caracteres.',
       same_password: 'Escolhe uma palavra-passe diferente da anterior.',
       over_email_send_rate_limit: 'Foram pedidos demasiados emails. Aguarda um pouco e tenta novamente.',
       over_request_rate_limit: 'Demasiadas tentativas. Aguarda um pouco e tenta novamente.',
-      email_address_not_authorized: 'O envio de emails ainda está em configuração. Podes entrar com Google.',
+      email_address_not_authorized: 'O envio de emails ainda está em configuração. Podes fazer Login com Google.',
       email_address_invalid: 'Confirma se o endereço de email está correto.',
       otp_expired: 'Este link expirou ou já foi utilizado. Pede um novo link.',
-      flow_state_expired: 'Este link expirou. Repete o pedido de entrada ou recuperação.',
-      session_not_found: 'A sessão terminou. Volta a entrar na tua conta.',
+      flow_state_expired: 'Este link expirou. Repete o Login ou a recuperação.',
+      session_not_found: 'A sessão terminou. Faz Login novamente.',
     };
     if (messages[error?.code]) return new Error(messages[error.code]);
     if (error?.name === 'AuthSessionMissingError') return new Error(messages.session_not_found);
     if (error?.name === 'AuthRetryableFetchError' || error instanceof TypeError) {
       return new Error('Não foi possível ligar. Verifica a ligação à internet e tenta novamente.');
     }
-    return new Error('Não foi possível concluir o pedido. Tenta novamente ou usa outro método de entrada.');
+    return new Error('Não foi possível concluir o pedido. Tenta novamente ou usa outro método de Login.');
   }
   function createAdapter(createClient, config) {
     const landing = new URL(root.location.href);
@@ -97,7 +97,16 @@
         if (error) throw authError(error);
         if (!data.session) { rememberRecovery(false); return null; }
         if (root.navigator.onLine === false) return player(data.session.user);
-        return player((await request('getUser')).user);
+        const result = await client.auth.getUser();
+        if (result.error) {
+          if (['user_not_found', 'session_not_found', 'invalid_jwt', 'refresh_token_not_found'].includes(result.error.code) || result.error.name === 'AuthSessionMissingError') {
+            try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
+            rememberRecovery(false);
+            return null;
+          }
+          throw authError(result.error);
+        }
+        return player(result.data.user);
       },
       signInGoogle: () => request('signInWithOAuth', { provider: 'google', options: { redirectTo: redirect() } }),
       signInEmail: ({ email, password }) => request('signInWithPassword', { email, password }),
@@ -121,11 +130,32 @@
       },
       async saveNickname({ nickname }) {
         const normalized = root.TennisSlicePopRanking.normalizeNickname(nickname);
+        // The database trigger independently enforces this, including concurrent/direct API writes.
+        const existing = player((await request('getUser')).user);
+        if (!existing) throw new Error('Faz Login antes de escolheres o nickname.');
+        if (existing.nickname) throw new Error('O teu nickname é definitivo e não pode ser alterado.');
         const data = await request('updateUser', { data: { nickname: normalized } });
         return player(data.user);
       },
       async signOut() {
-        await request('signOut', { scope: 'local' });
+        await ready;
+        // The official SDK clears this device before trying to revoke its refresh token.
+        const { error } = await client.auth.signOut({ scope: 'local' });
+        if (error && error.name !== 'AuthRetryableFetchError') throw authError(error);
+        rememberRecovery(false);
+      },
+      async deleteAccount({ confirmation }) {
+        if (confirmation !== 'APAGAR') throw new Error('Escreve APAGAR para confirmar.');
+        await ready;
+        let result;
+        try { result = await client.rpc('tennis_slice_pop_delete_account', { confirmation }); }
+        catch (_) { throw new Error('Não foi possível confirmar a eliminação. Verifica a ligação e tenta novamente.'); }
+        if (result.error || result.data !== true) {
+          if (result.error?.code === 'PGRST202') throw new Error('A eliminação de conta ainda está em preparação. Tenta mais tarde.');
+          throw new Error('Não foi possível confirmar a eliminação da conta. Tenta novamente.');
+        }
+        // Account deletion is already committed. A failed revocation must not report it as failed.
+        try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
         rememberRecovery(false);
       },
     });

@@ -23,6 +23,7 @@
   let recoveryMode = false;
   let handledAuthReturn = false;
   let playerRequest = 0;
+  let deletingAccount = false;
   const online = () => navigator.onLine !== false;
   const errorText = error => error instanceof Error ? error.message : 'Não foi possível concluir o pedido. Tenta novamente.';
 
@@ -34,25 +35,34 @@
     for (const dialog of document.querySelectorAll('.ranking-dialog[open]')) dialog.close();
   }
   function renderPlayer() {
-    el('accountBtn').textContent = player?.nickname || (player ? 'ESCOLHER NICKNAME' : 'ENTRAR');
+    el('accountBtn').textContent = player?.nickname || (player ? 'A MINHA CONTA' : 'LOGIN');
     el('playerNote').textContent = player?.nickname ? `Olá, ${player.nickname}. O court espera por ti.` : 'Sem conta. Sem esperar. Só jogar.';
-    el('competeBtn').textContent = client.available ? (player ? 'JOGAR PARA O RANKING' : 'ENTRAR E COMPETIR') : (player ? 'A MINHA CONTA' : 'ENTRAR / CRIAR CONTA');
+    el('competeBtn').textContent = client.available && player ? 'JOGAR PARA O RANKING' : (player ? 'A MINHA CONTA' : 'LOGIN / SIGN UP');
     el('signInView').classList.toggle('hidden', Boolean(player) || recoveryMode);
     el('profileView').classList.toggle('hidden', !player || recoveryMode);
     el('recoveryView').classList.toggle('hidden', !recoveryMode);
-    el('accountTitle').textContent = recoveryMode ? 'Nova palavra-passe' : player ? 'O teu lugar no court' : 'Entra no court';
+    el('accountTitle').textContent = recoveryMode ? 'Reset Password' : player ? 'O teu lugar no court' : authMode === 'signup' ? 'Sign Up' : authMode === 'reset' ? 'Reset Password' : 'Login';
     el('rankedPlayBtn').disabled = !client.available || !player?.nickname || starting;
     el('rankedPlayBtn').classList.toggle('hidden', !client.available);
     el('profileRankingNote').classList.toggle('hidden', client.available);
     el('rankingNickname').value = player?.nickname || '';
+    el('rankingNickname').readOnly = Boolean(player?.nickname);
+    el('nicknameForm').querySelector('button').classList.toggle('hidden', Boolean(player?.nickname));
+    el('nicknameHelp').textContent = player?.nickname ? 'O teu nickname é definitivo e não pode ser alterado.' : '3–20 letras, números, _ ou -. Depois de guardares, não pode ser alterado.';
     const authDisabled = !client.authAvailable || !online() || authBusy;
-    for (const id of ['googleSignInBtn', 'emailSignInBtn', 'authResetBtn', 'authLoginMode', 'authSignUpMode', 'savePasswordBtn', 'signOutBtn']) el(id).disabled = authDisabled;
+    for (const id of ['googleSignInBtn', 'emailSignInBtn', 'authResetBtn', 'authLoginMode', 'authSignUpMode', 'savePasswordBtn', 'deleteAccountBtn']) el(id).disabled = authDisabled;
+    el('signOutBtn').disabled = !client.authAvailable || authBusy;
+    el('confirmDeleteAccountBtn').disabled = authDisabled || el('deleteAccountText').value !== 'APAGAR';
+    el('cancelDeleteAccountBtn').disabled = deletingAccount;
+    el('accountDialog').querySelector('.guest-return').disabled = deletingAccount;
+    el('deleteAccountForm').setAttribute('aria-busy', String(deletingAccount));
+    if (!player || recoveryMode) setDeleteConfirmation(false);
     el('nicknameForm').querySelector('button').disabled = authDisabled;
     el('rankingRefreshBtn').classList.toggle('hidden', !client.available || !online());
     el('authAvailability').classList.toggle('hidden', client.authAvailable && online());
     el('authAvailability').textContent = online()
       ? 'As contas estão temporariamente indisponíveis. Podes continuar a jogar livremente.'
-      : 'Estás offline. Podes jogar livremente e entrar na conta quando tiveres ligação.';
+      : 'Estás offline. Podes jogar livremente e fazer Login quando tiveres ligação.';
     el('authLoginMode').setAttribute('aria-pressed', String(authMode !== 'signup'));
     el('authSignUpMode').setAttribute('aria-pressed', String(authMode === 'signup'));
     el('authPasswordField').classList.toggle('hidden', authMode === 'reset');
@@ -64,7 +74,7 @@
     el('rankingPassword').autocomplete = authMode === 'signup' ? 'new-password' : 'current-password';
     el('rankingPasswordConfirm').disabled = authMode !== 'signup';
     el('rankingPasswordConfirm').required = authMode === 'signup';
-    el('emailSignInBtn').textContent = authMode === 'signup' ? 'CRIAR CONTA' : authMode === 'reset' ? 'ENVIAR LINK DE RECUPERAÇÃO' : 'ENTRAR';
+    el('emailSignInBtn').textContent = authMode === 'signup' ? 'SIGN UP' : authMode === 'reset' ? 'RESET PASSWORD' : 'LOGIN';
     el('authResetBtn').classList.toggle('hidden', authMode === 'reset');
     el('emailSignInForm').setAttribute('aria-busy', String(authBusy));
     el('passwordRecoveryForm').setAttribute('aria-busy', String(authBusy));
@@ -84,7 +94,7 @@
     renderPlayer();
     if (recoveryMode || (!handledAuthReturn && (state?.returned || state?.error))) {
       handledAuthReturn = true;
-      showAccount(state?.error || (recoveryMode ? 'Confirma a tua nova palavra-passe.' : player ? 'Entrada concluída. Bem-vindo ao court.' : 'O link não permitiu entrar. Tenta novamente.'));
+      showAccount(state?.error || (recoveryMode ? 'Confirma a tua nova palavra-passe.' : player ? 'Login concluído. Bem-vindo ao court.' : 'O link não permitiu fazer Login. Tenta novamente.'));
     }
   }
   function renderMode() {
@@ -112,7 +122,7 @@
       displayedDay = challenge.day;
       el('dailyDate').textContent = `${challenge.day.slice(8)}.${challenge.day.slice(5, 7)}`;
       const caption = !online() ? 'Treino offline. Não entra nas classificações.'
-        : client.available ? 'Desafio aberto. Treina ou entra para competir.' : 'Treino diário. As classificações abrem em breve.';
+        : client.available ? 'Desafio aberto. Treina ou faz Login para competir.' : 'Treino diário. As classificações abrem em breve.';
       el('dailyCaption').textContent = caption;
       dailyReady = true;
       el('dailyPlayBtn').disabled = starting;
@@ -150,7 +160,7 @@
       if (!Array.isArray(rows)) throw new Error('Não foi possível carregar a classificação.');
       el('rankingDialog').setAttribute('aria-busy', 'false');
       if (!rows.length) {
-        emptyBoard('O primeiro lugar está livre.', 'Ainda não há partidas neste período. Entra e estreia este court.');
+        emptyBoard('O primeiro lugar está livre.', 'Ainda não há partidas neste período. Faz Login e estreia este court.');
         return;
       }
       const fragment = document.createDocumentFragment();
@@ -258,7 +268,7 @@
       el('retrySubmitBtn').classList.remove('hidden');
     } else {
       el('submissionStatus').textContent = `${event.detail.mode === 'daily' ? 'Treino do Desafio do Dia' : 'Partida livre'} · ${Math.round(event.detail.duration_ms / 1000)}s.`;
-      el('resultRankingBtn').textContent = 'ENTRAR NO RANKING ↗';
+      el('resultRankingBtn').textContent = 'LOGIN PARA O RANKING ↗';
     }
   });
   window.TennisSlicePopLobby = Object.freeze({
@@ -284,7 +294,7 @@
   el('rankedPlayBtn').addEventListener('click', () => play(competition, true));
   el('resultRankingBtn').addEventListener('click', () => {
     if (lastPlay.ranked) showRankings();
-    else showAccount('Esta partida foi de treino. Entra para começar uma nova partida para o ranking.');
+    else showAccount('Esta partida foi de treino. Faz Login para começares uma nova partida para o ranking.');
   });
   el('retrySubmitBtn').addEventListener('click', submitPending);
   function clearPasswords() {
@@ -297,8 +307,8 @@
     el('accountStatus').textContent = mode === 'reset' ? 'Indica o email da tua conta para receberes um link de recuperação.' : '';
     renderPlayer();
   }
-  async function authAction(action) {
-    if (authBusy || !client.authAvailable || !online()) return;
+  async function authAction(action, allowOffline = false) {
+    if (authBusy || !client.authAvailable || (!allowOffline && !online())) return;
     authBusy = true;
     el('accountStatus').textContent = 'A ligar ao clube…';
     renderPlayer();
@@ -331,12 +341,12 @@
         const result = await client.signUp(email, password);
         clearPasswords();
         await refreshPlayer();
-        el('accountStatus').textContent = result.signedIn ? 'Conta criada. Bem-vindo ao court.' : 'Verifica o teu email para confirmar a conta. Se já estiveres registado, entra ou recupera a palavra-passe. Confirma também o spam.';
+        el('accountStatus').textContent = result.signedIn ? 'Sign Up concluído. Bem-vindo ao court.' : 'Verifica o teu email para confirmar a conta. Se já tiveres conta, faz Login ou recupera a palavra-passe. Confirma também o spam.';
       } else {
         await client.signInEmail(email, password);
         clearPasswords();
         await refreshPlayer();
-        el('accountStatus').textContent = 'Entrada concluída. Bem-vindo ao court.';
+        el('accountStatus').textContent = 'Login concluído. Bem-vindo ao court.';
       }
     });
   });
@@ -355,11 +365,12 @@
   });
   el('nicknameForm').addEventListener('submit', async event => {
     event.preventDefault();
+    if (player?.nickname) { el('accountStatus').textContent = 'O teu nickname é definitivo e não pode ser alterado.'; return; }
     const nickname = el('rankingNickname').value;
     await authAction(async () => {
       player = await client.saveNickname(nickname);
       renderPlayer();
-      el('accountStatus').textContent = 'Nickname guardado na tua conta.';
+      el('accountStatus').textContent = 'Nickname confirmado. Este é o teu nome definitivo no court.';
     });
   });
   el('signOutBtn').addEventListener('click', async () => {
@@ -371,10 +382,48 @@
       clearPasswords();
       el('rankingEmail').value = '';
       renderPlayer();
-      el('accountStatus').textContent = 'Saíste da conta. Podes continuar a jogar como convidado.';
+      el('accountStatus').textContent = 'Logoff concluído. Podes continuar a jogar como convidado.';
+    }, true);
+  });
+  function setDeleteConfirmation(visible) {
+    el('deleteAccountConfirm').classList.toggle('hidden', !visible);
+    el('deleteAccountBtn').classList.toggle('hidden', visible);
+    el('deleteAccountBtn').setAttribute('aria-expanded', String(visible));
+    if (!visible) { el('deleteAccountText').value = ''; el('confirmDeleteAccountBtn').disabled = true; }
+  }
+  el('deleteAccountBtn').addEventListener('click', () => {
+    if (!player || authBusy) return;
+    el('accountStatus').textContent = '';
+    setDeleteConfirmation(true);
+    el('deleteAccountText').focus();
+  });
+  el('cancelDeleteAccountBtn').addEventListener('click', () => {
+    if (!deletingAccount) setDeleteConfirmation(false);
+  });
+  el('deleteAccountText').addEventListener('input', () => {
+    el('confirmDeleteAccountBtn').disabled = authBusy || !online() || el('deleteAccountText').value !== 'APAGAR';
+  });
+  el('deleteAccountForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!player || el('deleteAccountText').value !== 'APAGAR') return;
+    await authAction(async () => {
+      deletingAccount = true;
+      el('accountStatus').textContent = 'A apagar a conta…';
+      renderPlayer();
+      try {
+        await client.deleteAccount(el('deleteAccountText').value);
+        ++playerRequest;
+        player = null;
+        recoveryMode = false;
+        clearPasswords();
+        el('rankingEmail').value = '';
+        setDeleteConfirmation(false);
+        el('accountStatus').textContent = 'Conta apagada. Podes continuar a jogar livremente.';
+      } finally { deletingAccount = false; }
     });
   });
-  el('accountDialog').addEventListener('close', clearPasswords);
+  el('accountDialog').addEventListener('cancel', event => { if (deletingAccount) event.preventDefault(); });
+  el('accountDialog').addEventListener('close', () => { clearPasswords(); setDeleteConfirmation(false); });
   window.addEventListener('slice-pop:auth-changed', refreshPlayer);
   window.addEventListener('online', () => { refreshPlayer(); refreshDaily(); if (el('rankingDialog').open) loadLeaderboard(); });
   window.addEventListener('offline', () => { renderPlayer(); refreshDaily(); if (el('rankingDialog').open) loadLeaderboard(); });

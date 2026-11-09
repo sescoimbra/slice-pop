@@ -72,6 +72,10 @@ button:disabled { cursor: default; opacity: .45; }
 .account-status:empty { display: none; }
 .profile-play { background: var(--led-green); }
 .sign-out, .guest-return { display: block; margin: 12px auto; }
+.delete-account { display: block; margin: 12px auto; }
+.delete-confirm { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--sb-edge); }
+.delete-confirm .privacy-note { margin: 0 0 14px; }
+.delete-confirm .text-button { display: block; margin: 8px auto; }
 .guest-return { margin: 14px auto 18px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (max-height: 740px) {

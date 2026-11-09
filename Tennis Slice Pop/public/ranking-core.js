@@ -73,6 +73,7 @@
       updatePassword: password => call('updatePassword', { password }),
       saveNickname: nickname => call('saveNickname', { nickname: normalizeNickname(nickname) }),
       signOut: () => call('signOut'),
+      deleteAccount: confirmation => call('deleteAccount', { confirmation }),
       startMatch: mode => call('startMatch', { mode, rules_version: RULES_VERSION }),
       submitMatch: (sessionId, result) => call('submitMatch', {
         session_id: sessionId, ...matchPayload(result),
