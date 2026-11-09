@@ -465,3 +465,70 @@ button.play-action, #startScreen .challenge-banner .challenge-call { display: fl
   background: var(--ball); color: var(--button-ink); cursor: pointer;
   box-shadow: 0 4px 16px #0003;
 }
+
+/* Short viewports keep the account control clear without wasting menu space. */
+@media (max-height: 740px) {
+  #startScreen.game-menu { --account-top-space: max(68px, calc(env(safe-area-inset-top) + 56px)); }
+  #startScreen > .lobby-panel { padding: 16px 22px 14px; }
+  #startScreen .lobby-topline { padding: 0; }
+  #startScreen .lobby-hero { margin: 12px 0; }
+  #startScreen .big-title { margin: 8px 0; font-size: 28px; line-height: 1.1; }
+  #startScreen .tagline { margin: 0; font-size: 13px; line-height: 1.45; }
+  #startScreen .lobby-modes { margin-top: 10px; }
+  #startScreen .daily-slot { min-height: 100px; padding-top: 8px; }
+  #startScreen .daily-caption { margin: 4px 0 0; line-height: 1.4; }
+  #startScreen .lobby-footer { margin-top: 0; padding-top: 10px; }
+  #startScreen .best { margin: 0; }
+  #startScreen .lobby-links { margin-top: 4px; }
+  .about-creator-logo { width: 120px; height: 120px; margin-bottom: 10px; }
+}
+
+.settings-copy details { border-bottom: 1px solid var(--sb-edge); }
+.settings-copy summary {
+  padding: 11px 0; min-height: 44px; color: var(--paper);
+  font: 500 15px/1.4 var(--font-cond); cursor: pointer;
+}
+.settings-copy details p { margin: 0 0 10px; font-size: 13px; line-height: 1.45; }
+.settings-copy details a { margin: 0 0 12px; font-size: 13px; }
+
+/* Compact account forms retain readable 16px inputs and full touch targets. */
+@media (max-height: 760px) {
+  .account-dialog .dialog-heading { padding: 14px 18px 10px; }
+  .account-dialog .dialog-heading h2 { margin-top: 4px; font-size: 22px; }
+  .account-dialog .account-body { padding: 0 18px; }
+  .account-dialog .account-intro { margin-bottom: 10px; font-size: 13px; line-height: 1.4; }
+  .account-dialog .auth-divider { margin: 10px 0; }
+  .account-dialog .auth-mode { margin-bottom: 10px; }
+  .account-dialog .period-switch button { padding: 8px; }
+  .account-dialog .field-label { margin-bottom: 4px; font-size: 10px; letter-spacing: .5px; }
+  .account-dialog .account-input { padding: 9px 10px; min-height: 42px; }
+  .account-dialog .auth-field { margin-top: 8px; }
+  .account-dialog .account-body .btn-copy { margin-top: 8px; }
+  .account-dialog .privacy-note { margin-top: 8px; line-height: 1.4; }
+  .account-dialog .account-status { padding: 0 18px; margin-top: 8px; line-height: 1.4; }
+  .account-dialog .guest-return { width: calc(100% - 36px); margin: 12px 18px 14px; }
+  .account-dialog #emailSignInForm { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 10px; }
+  #emailSignInForm > label, #emailSignInForm > input,
+  #emailSignInForm > p, #emailSignInForm > button { grid-column: 1 / -1; }
+  #emailSignInForm > #authPasswordField { grid-column: 1 / -1; }
+  #emailSignInForm:has(#authConfirmField:not(.hidden)) > #authPasswordField { grid-column: auto; }
+  #emailSignInForm .auth-field { min-width: 0; display: flex; flex-direction: column; }
+  #emailSignInForm .auth-field input { margin-top: auto; }
+}
+@media (max-height: 650px) {
+  .account-dialog .dialog-heading .lobby-kicker,
+  .account-dialog #signInView > .account-intro,
+  .account-dialog #signInView > .privacy-note { display: none; }
+  .account-dialog .auth-divider { margin: 8px 0; }
+  .account-dialog .dialog-heading { padding-top: 12px; }
+  .account-dialog #authResetBtn { margin-top: 4px; }
+  .account-dialog .guest-return { margin-top: 8px; margin-bottom: 10px; }
+  .account-dialog:has(#deleteAccountConfirm:not(.hidden)) #profileView > .account-intro,
+  .account-dialog:has(#deleteAccountConfirm:not(.hidden)) #nicknameForm,
+  .account-dialog:has(#deleteAccountConfirm:not(.hidden)) #profileRankingNote { display: none; }
+  #privacyDialog .dialog-heading { padding: 14px 18px 12px; }
+  #privacyDialog .settings-copy { padding: 0 18px 12px; }
+  #privacyDialog summary { min-height: 36px; padding: 7px 0; font-size: 14px; }
+  #privacyDialog .settings-copy details p { font-size: 12px; }
+  #privacyDialog .settings-done { margin: 0 18px 14px; }
+}
