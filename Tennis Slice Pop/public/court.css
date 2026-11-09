@@ -178,7 +178,6 @@ body:has(#courtSelectScreen:not(.hidden), #startScreen:not(.hidden)) #app > :not
 #startScreen .tagline { text-align: left; font-size: 13px; margin-top: 10px; margin-bottom: 18px; color: var(--muted); }
 .lobby-topline { padding-top: 18px; }
 .lobby-kicker { color: var(--muted); font-size: 9px; letter-spacing: 1.2px; }
-#accountBtn { padding: 7px 10px; border: 1px solid var(--sb-edge); border-radius: 20px; font-size: 10px; color: var(--paper); }
 #playBtn { display: flex; justify-content: space-between; align-items: center; letter-spacing: 1.5px; font-size: 15px; }
 #playBtn span { font-size: 24px; font-weight: 400; }
 .panel { background: linear-gradient(145deg, #ffffff0d, #00000024), var(--sb-bg); border-color: var(--sb-edge); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 18px 65px #0005, inset 0 1px #fff1; }
@@ -316,7 +315,6 @@ body:has(#courtSelectScreen:not(.hidden), #startScreen:not(.hidden)) #app > :not
 #startScreen .best b { font-size: 20px; color: #fffdf1; }
 #startScreen .lobby-links { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
 #startScreen .lobby-links .text-button { margin: 0; padding: 8px 0; border: 0; border-radius: 0; color: #f5f2e6; font-size: 13px; font-weight: 400; letter-spacing: 0; min-height: 40px; }
-#startScreen #accountBtn { max-width: 110px; }
 @media (max-width: 420px), (max-height: 700px) {
   #startScreen.game-menu { padding: 14px; }
   #startScreen > .lobby-panel { padding: 20px 22px 16px; max-height: calc(100dvh - 28px); border-radius: 18px; }
@@ -452,4 +450,18 @@ button.play-action, #startScreen .challenge-banner .challenge-call { display: fl
   --racket-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg transform='rotate(35 16 16)' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='16' cy='11' rx='7' ry='9'/%3E%3Cpath d='M12 4v14m4-16v18m4-16v14M10 8h12M9 13h14m-11 6 4 4 4-4m-4 4v7'/%3E%3Cpath d='M16 25v5' stroke-width='3.8'/%3E%3C/g%3E%3C/svg%3E");
   mask: var(--racket-mask) center / contain no-repeat;
   -webkit-mask: var(--racket-mask) center / contain no-repeat;
+}
+
+/* Account access stays above the menu card, outside its scrolling content. */
+#startScreen.game-menu {
+  --account-top-space: max(76px, calc(env(safe-area-inset-top) + 60px));
+  padding-top: var(--account-top-space);
+}
+#startScreen > .lobby-panel { max-height: calc(100dvh - var(--account-top-space) - 18px); }
+#startScreen .account-trigger {
+  position: absolute; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right));
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0; border: 1px solid var(--ball); border-radius: 50%;
+  background: var(--ball); color: var(--button-ink); cursor: pointer;
+  box-shadow: 0 4px 16px #0003;
 }

@@ -35,7 +35,9 @@
     for (const dialog of document.querySelectorAll('.ranking-dialog[open]')) dialog.close();
   }
   function renderPlayer() {
-    el('accountBtn').textContent = player?.nickname || (player ? 'A MINHA CONTA' : 'LOGIN');
+    const accountLabel = player?.nickname ? 'Conta de ' + player.nickname : player ? 'A minha conta' : 'Login';
+    el('accountBtn').setAttribute('aria-label', accountLabel);
+    el('accountBtn').title = accountLabel;
     el('playerNote').textContent = player?.nickname ? `Olá, ${player.nickname}. O court espera por ti.` : 'Sem conta. Sem esperar. Só jogar.';
     el('competeBtn').textContent = client.available && player ? 'JOGAR PARA O RANKING' : (player ? 'A MINHA CONTA' : 'LOGIN / SIGN UP');
     el('signInView').classList.toggle('hidden', Boolean(player) || recoveryMode);

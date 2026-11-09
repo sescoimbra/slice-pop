@@ -7,7 +7,6 @@ button:disabled { cursor: default; opacity: .45; }
 .lobby-topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 22px 0; }
 .lobby-kicker { color: var(--led-green); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; }
 .text-button { border: 0; background: none; color: var(--led-cyan); font: 600 11px var(--font-cond); letter-spacing: 1px; cursor: pointer; padding: 8px 0; }
-#accountBtn { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #startScreen .big-title { font-size: clamp(32px, 10vw, 46px); margin-top: 10px; }
 #startScreen .rules { margin-bottom: 14px; gap: 6px; }
 .guest-note { margin: 10px 22px 16px; color: var(--muted); font-size: 12px; }
